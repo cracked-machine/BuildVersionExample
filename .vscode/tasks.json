@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "options": {
+                "env": {
+                    "EXPORTCOMPILECMDS": "-DCMAKE_EXPORT_COMPILE_COMMANDS=1",
+                    "EXPORTBUILDVERSION": "-DBUILD_VERSION=${BUILD_VERSION}",
+                },
+                
+            },
+            "command": [
+                "export BUILD_VERSION=$(date +%D%T) && ",
+                "cmake -S ${workspaceFolder} -B ${workspaceFolder}/build ${EXPORTBUILDVERSION} ${EXPORTCOMPILECMDS} && ",
+                "cmake --build ${workspaceFolder}/build &&",
+                "rm -rf gcov && mkdir gcov && gcovr -d --json gcov/main.json && gcovr -a gcov/main.json --html-details gcov/coverage.html"
+            ]
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/src/BuildVersionProject"
+        }
+    ]
+}
